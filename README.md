@@ -71,6 +71,7 @@ Fields:
 - `nickname`
 - `phoneNumber`
 - `bio`
+- `createdAt`
 - `customer`
 
 Relationship:
@@ -125,6 +126,7 @@ Includes queries for:
 - Search by partial phone number
 - Find profiles with bio
 - Find nicknames by prefix
+- Find profiles created after a specific date
 - Count profiles by phone number prefix
 
 ## Run Locally

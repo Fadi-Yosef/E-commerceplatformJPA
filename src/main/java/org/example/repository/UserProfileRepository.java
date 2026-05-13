@@ -1,5 +1,6 @@
 package org.example.repository;
 
+import java.time.Instant;
 import java.util.List;
 import java.util.Optional;
 import org.example.entity.UserProfile;
@@ -14,6 +15,8 @@ public interface UserProfileRepository extends JpaRepository<UserProfile, Long> 
     List<UserProfile> findByBioIsNotNull();
 
     List<UserProfile> findByNicknameStartingWithIgnoreCase(String prefix);
+
+    List<UserProfile> findByCreatedAtAfter(Instant createdAt);
 
     long countByPhoneNumberStartingWith(String prefix);
 }
