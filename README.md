@@ -1,14 +1,6 @@
 # E-commerce Platform JPA
 
-Workshop project for building the foundation of an e-commerce system with Spring Boot, Spring Data JPA, and one-to-one entity relationships.
-
-## Part 1 Scope
-
-This part focuses on the relationship between a customer and their secondary data:
-
-- `Customer`: primary user/customer entity
-- `Address`: shipping or billing address
-- `UserProfile`: optional extra customer details
+Workshop project for building an e-commerce system with Spring Boot, Spring Data JPA, entity relationships, repositories, and startup data seeding.
 
 ## Tech Stack
 
@@ -22,114 +14,118 @@ This part focuses on the relationship between a customer and their secondary dat
 - Lombok
 - Maven
 
-## Domain Model
+## Part 1 Scope
 
-### Customer
+Part 1 introduces customer data and one-to-one relationships.
 
-Mapped to the `customers` table.
+Entities:
 
-Fields:
-
-- `id`
-- `firstName`
-- `lastName`
-- `email`
-- `createdAt`
-- `address`
-- `profile`
+- `Customer`
+- `Address`
+- `UserProfile`
 
 Relationships:
 
-- One-to-one with `Address`
-- Optional bidirectional one-to-one with `UserProfile`
-- Cascades persistence operations to related address/profile records
-- Uses orphan removal for removed related entities
+- `Customer` has one mandatory `Address`.
+- `Customer` has one optional `UserProfile`.
+- Address and profile records cascade with the customer and use orphan removal.
 
-### Address
+Repositories:
 
-Mapped to the `addresses` table.
+- `CustomerRepository`
+- `AddressRepository`
+- `UserProfileRepository`
 
-Fields:
+## Part 2 Scope
 
-- `id`
-- `street`
-- `city`
-- `zipCode`
+Part 2 adds catalog management, order transactions, promotions, repositories, and startup seed data.
 
-Relationship:
+Entities and enum:
 
-- Standalone entity
-- Referenced by `Customer` through `address_id`
+- `Category`
+- `Product`
+- `Promotion`
+- `Order`
+- `OrderItem`
+- `OrderStatus`
 
-### UserProfile
+Relationships:
 
-Mapped to the `user_profiles` table.
+- `Category` one-to-many `Product`.
+- `Product` many-to-one `Category` using `category_id`.
+- `Product` many-to-many `Promotion` through `products_promotions`.
+- `Customer` one-to-many `Order`.
+- `Order` many-to-one `Customer` using `customer_id`.
+- `Order` one-to-many `OrderItem` with cascade and orphan removal.
+- `OrderItem` many-to-one `Product` using `product_id`.
+- `OrderStatus` is stored as a readable string.
 
-Fields:
+Important mapping choices:
 
-- `id`
-- `nickname`
-- `phoneNumber`
-- `bio`
-- `createdAt`
-- `customer`
+- Reference relationships use explicit lazy fetching.
+- `Order.items` is the inverse side with `mappedBy = "order"`.
+- `OrderItem.order` owns the `order_id` foreign key.
+- `Product` owns the product-promotion join table.
+- `CascadeType.ALL` is avoided for product-promotion many-to-many relationships.
+- `Order` validates that at least one `OrderItem` exists before saving.
+- `OrderItem.priceAtPurchase` stores the historical price at checkout time instead of depending on the current product price.
 
-Relationship:
+## Repositories
 
-- Inverse side of the bidirectional one-to-one relationship with `Customer`
-- Uses `mappedBy = "profile"`
+Part 2 repositories:
+
+- `CategoryRepository`
+- `ProductRepository`
+- `OrderRepository`
+- `OrderItemRepository`
+- `PromotionRepository`
+
+Query coverage:
+
+- Category lookup by name, existence check, and keyword search.
+- Product lookup by category name, category id, price range, keyword, cheaper-than price, sorting, and category count.
+- Order lookup by customer id, status, date ranges, contained product, status count, and customer/status.
+- `OrderRepository.findByStatus(...)` uses `@EntityGraph` to load order items and avoid the basic N+1 problem.
+- Promotion lookup by active date, code, start date, end date, no end date, and active today.
+- Order item lookup by order id, product id, and quantity threshold.
+
+## Data Seeding
+
+`DataSeeder` runs automatically when the application starts.
+
+Seeded categories:
+
+- Electronics
+- Books
+- Home
+- Clothing
+
+Seeded products are linked to existing categories. The seeder checks for existing category and product names before inserting, so rerunning the application does not create duplicates.
 
 ## Database Schema
 
 Hibernate generates the schema from the JPA mappings.
 
-Tables:
+Main tables:
 
 - `addresses`
 - `user_profiles`
 - `customers`
+- `categories`
+- `products`
+- `product_images`
+- `promotions`
+- `products_promotions`
+- `orders`
+- `order_items`
 
-Foreign keys:
+## Verification
 
-- `customers.address_id` references `addresses.id`
-- `customers.profile_id` references `user_profiles.id`
+Run tests:
 
-## Repositories
-
-### CustomerRepository
-
-Includes queries for:
-
-- Find by email
-- Find by last name ignoring case
-- Find by address city
-- Search email by keyword
-- Find by creation date range
-- Count customers by city
-- Check if email exists
-
-### AddressRepository
-
-Includes queries for:
-
-- Find by zip code
-- Find by city
-- Find by street name
-- Find by zip code prefix
-- Count customers by zip code
-
-### UserProfileRepository
-
-Includes queries for:
-
-- Find by nickname
-- Search by partial phone number
-- Find profiles with bio
-- Find nicknames by prefix
-- Find profiles created after a specific date
-- Count profiles by phone number prefix
-
-## Run Locally
+```bash
+mvn test
+```
 
 Start the application:
 
@@ -137,10 +133,10 @@ Start the application:
 mvn spring-boot:run
 ```
 
-Run tests:
+If port `8080` is already in use, run with a random port:
 
 ```bash
-mvn test
+mvn spring-boot:run -Dspring-boot.run.arguments=--server.port=0
 ```
 
 The application uses an in-memory H2 database by default.
@@ -165,10 +161,28 @@ sa
 
 Password is empty.
 
+## Submission Checklist
+
+- [x] Git Branch: Created `feature/jpa-part2`.
+- [x] Entities & Enums: Added the required catalog, promotion, order, order item, and status model.
+- [x] Relationships: Implemented many-to-one, one-to-many, and many-to-many mappings with proper ownership and cascading.
+- [x] Repositories: Added required Spring Data JPA repositories and query methods.
+- [x] N+1 Strategy: Used `@EntityGraph` for loading orders by status with items.
+- [x] Extra Task: Added automatic startup data seeding.
+- [x] Verification: Ran tests and verified application startup, schema generation, and seed inserts.
+- [x] Commits: Created descriptive commits for entity mappings, repositories, seeding, and documentation.
+- [x] Push: Pushed `feature/jpa-part2` to GitHub.
+
 ## Git
 
 Current workshop branch:
 
 ```bash
-feature/jpa-part1
+feature/jpa-part2
+```
+
+Pull request link:
+
+```text
+https://github.com/Fadi-Yosef/E-commerceplatformJPA/pull/new/feature/jpa-part2
 ```
