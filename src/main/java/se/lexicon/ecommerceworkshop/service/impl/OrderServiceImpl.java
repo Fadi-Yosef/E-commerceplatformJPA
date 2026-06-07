@@ -18,6 +18,7 @@ import se.lexicon.ecommerceworkshop.exception.BusinessRuleException;
 import se.lexicon.ecommerceworkshop.exception.ResourceNotFoundException;
 import se.lexicon.ecommerceworkshop.mapper.OrderMapper;
 import se.lexicon.ecommerceworkshop.service.OrderService;
+import se.lexicon.ecommerceworkshop.service.PromotionService;
 
 @Service
 public class OrderServiceImpl implements OrderService {
@@ -26,17 +27,20 @@ public class OrderServiceImpl implements OrderService {
     private final CustomerRepository customerRepository;
     private final ProductRepository productRepository;
     private final OrderMapper orderMapper;
+    private final PromotionService promotionService;
 
     public OrderServiceImpl(
             OrderRepository orderRepository,
             CustomerRepository customerRepository,
             ProductRepository productRepository,
-            OrderMapper orderMapper
+            OrderMapper orderMapper,
+            PromotionService promotionService
     ) {
         this.orderRepository = orderRepository;
         this.customerRepository = customerRepository;
         this.productRepository = productRepository;
         this.orderMapper = orderMapper;
+        this.promotionService = promotionService;
     }
 
     @Override
@@ -50,10 +54,12 @@ public class OrderServiceImpl implements OrderService {
             Product product = productRepository.findById(itemRequest.productId())
                     .orElseThrow(() -> new ResourceNotFoundException("Product", itemRequest.productId()));
 
-            BigDecimal priceAtPurchase = product.getPrice();
-            if (priceAtPurchase == null) {
+            BigDecimal currentPrice = product.getPrice();
+            if (currentPrice == null) {
                 throw new BusinessRuleException("Product has no price: " + product.getId());
             }
+            BigDecimal discount = promotionService.calculateDiscount(product);
+            BigDecimal priceAtPurchase = currentPrice.subtract(discount).max(BigDecimal.ZERO);
 
             resolvedItems.add(new OrderMapper.ResolvedOrderItem(
                     product,

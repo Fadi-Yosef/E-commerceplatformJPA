@@ -69,6 +69,7 @@ Important mapping choices:
 - `CascadeType.ALL` is avoided for product-promotion many-to-many relationships.
 - `Order` validates that at least one `OrderItem` exists before saving.
 - `OrderItem.priceAtPurchase` stores the historical price at checkout time instead of depending on the current product price.
+- `Promotion.discountPercentage` stores the percentage used by the service layer when applying active product discounts.
 
 ## Repositories
 
@@ -102,6 +103,41 @@ Seeded categories:
 
 Seeded products are linked to existing categories. The seeder checks for existing category and product names before inserting, so rerunning the application does not create duplicates.
 
+## Part 3 Scope
+
+Part 3 adds a service layer, DTO records, manual mappers, transaction boundaries, validation, and custom business exceptions.
+
+DTO packages:
+
+- `se.lexicon.ecommerceworkshop.dto`
+
+Mapper components:
+
+- `CustomerMapper`
+- `ProductMapper`
+- `OrderMapper`
+- `CategoryMapper`
+- `PromotionMapper`
+
+Service interfaces and implementations:
+
+- `CustomerService`: register customers, find customers by id, and update customer details.
+- `ProductService`: create products, list products, and search products by name.
+- `OrderService`: place orders transactionally, resolve customers/products, capture `priceAtPurchase`, and apply active promotion discounts.
+- `CategoryService`: create categories with duplicate checks and list all categories.
+- `PromotionService`: list currently active promotions and calculate the best active discount for a product.
+
+Custom exceptions:
+
+- `ResourceNotFoundException`
+- `DuplicateResourceException`
+- `BusinessRuleException`
+
+Validation:
+
+- Request DTOs use Jakarta Validation annotations such as `@NotBlank`, `@Email`, `@Size`, `@NotEmpty`, and `@Min`.
+- Service interfaces are prepared for method-level validation where request DTOs or method parameters are accepted.
+
 ## Database Schema
 
 Hibernate generates the schema from the JPA mappings.
@@ -118,6 +154,8 @@ Main tables:
 - `products_promotions`
 - `orders`
 - `order_items`
+
+The `promotions` table includes `discount_percentage`, which is used by `PromotionService` and `OrderService` when calculating checkout prices.
 
 ## Verification
 
@@ -161,7 +199,7 @@ sa
 
 Password is empty.
 
-## Submission Checklist
+## Part 2 Submission Checklist
 
 - [x] Git Branch: Created `feature/jpa-part2`.
 - [x] Entities & Enums: Added the required catalog, promotion, order, order item, and status model.
@@ -173,16 +211,30 @@ Password is empty.
 - [x] Commits: Created descriptive commits for entity mappings, repositories, seeding, and documentation.
 - [x] Push: Pushed `feature/jpa-part2` to GitHub.
 
+## Part 3 Submission Checklist
+
+- [x] Git Branch: Created `feature/service-layer`.
+- [x] Dependencies: Verified `spring-boot-starter-validation` is present.
+- [x] DTOs & Records: Added request and response records with validation annotations.
+- [x] Mappers: Added Spring mapper components for entities and DTOs.
+- [x] Services: Implemented service interfaces and implementations for customers, products, orders, categories, and promotions.
+- [x] Transactions: Added transactional boundaries for write operations and order placement.
+- [x] Exceptions: Added custom exceptions for not-found resources, duplicates, and business-rule failures.
+- [x] Optional Services: Added `CategoryService` and `PromotionService`.
+- [x] Verification: Added service-layer integration tests and ran `mvn test`.
+- [x] Commits: Created descriptive Part 3 commits.
+- [x] Push: Pushed `feature/service-layer` to GitHub.
+
 ## Git
 
 Current workshop branch:
 
 ```bash
-feature/jpa-part2
+feature/service-layer
 ```
 
 Pull request link:
 
 ```text
-https://github.com/Fadi-Yosef/E-commerceplatformJPA/pull/new/feature/jpa-part2
+https://github.com/Fadi-Yosef/E-commerceplatformJPA/pull/new/feature/service-layer
 ```
