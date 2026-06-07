@@ -11,8 +11,11 @@ import jakarta.persistence.PrePersist;
 import jakarta.persistence.PreUpdate;
 import jakarta.persistence.Table;
 import jakarta.persistence.UniqueConstraint;
+import jakarta.validation.constraints.DecimalMax;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.PositiveOrZero;
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.Set;
@@ -46,6 +49,12 @@ public class Promotion {
 
     @Column(name = "end_date")
     private LocalDate endDate;
+
+    @NotNull
+    @DecimalMax(value = "100.00", message = "Discount percentage cannot be greater than 100")
+    @PositiveOrZero
+    @Column(name = "discount_percentage", nullable = false, precision = 5, scale = 2)
+    private BigDecimal discountPercentage = BigDecimal.ZERO;
 
     @ManyToMany(mappedBy = "promotions", fetch = FetchType.LAZY)
     private Set<Product> products = new HashSet<>();
