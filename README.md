@@ -213,7 +213,7 @@ Password is empty.
 
 ## Part 3 Submission Checklist
 
-- [x] Git Branch: Created `feature/service-layer`.
+- [x] Git Branch: Created `feature/service-layer-part-3`.
 - [x] Dependencies: Verified `spring-boot-starter-validation` is present.
 - [x] DTOs & Records: Added request and response records with validation annotations.
 - [x] Mappers: Added Spring mapper components for entities and DTOs.
@@ -223,18 +223,18 @@ Password is empty.
 - [x] Optional Services: Added `CategoryService` and `PromotionService`.
 - [x] Verification: Added service-layer integration tests and ran `mvn test`.
 - [x] Commits: Created descriptive Part 3 commits.
-- [x] Push: Pushed `feature/service-layer` to GitHub.
+- [x] Push: Pushed `feature/service-layer-part-3` to GitHub.
 
 ## Git
 
 Current workshop branch:
 
 ```bash
-feature/service-layer
+feature/service-layer-part-3
 ```
 
 Pull request link:
 
 ```text
-https://github.com/Fadi-Yosef/E-commerceplatformJPA/pull/new/feature/service-layer
+https://github.com/Fadi-Yosef/E-commerceplatformJPA/pull/new/feature/service-layer-part-3
 ```
