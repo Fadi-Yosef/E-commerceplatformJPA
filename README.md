@@ -1,6 +1,6 @@
 # E-commerce Platform JPA
 
-Workshop project for building an e-commerce system with Spring Boot, Spring Data JPA, entity relationships, repositories, and startup data seeding.
+Workshop project for building an e-commerce system with Spring Boot across four parts: JPA entities and relationships (Part 1), catalog and order management (Part 2), service layer with DTOs and validation (Part 3), and REST controller layer with global exception handling and Swagger UI (Part 4).
 
 ## Tech Stack
 
