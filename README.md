@@ -9,6 +9,7 @@ Workshop project for building an e-commerce system with Spring Boot, Spring Data
 - Spring Data JPA
 - Spring Web
 - Spring Validation
+- SpringDoc OpenAPI (Swagger UI)
 - H2 Database
 - MySQL Driver
 - Lombok
@@ -225,16 +226,50 @@ Password is empty.
 - [x] Commits: Created descriptive Part 3 commits.
 - [x] Push: Pushed `feature/service-layer` to GitHub.
 
+## Part 4 Scope
+
+Part 4 adds the REST controller layer, centralized exception handling, and Swagger UI documentation.
+
+Controllers:
+
+- `CustomerController`: `POST /api/v1/customers`, `GET /api/v1/customers/{id}`, `PUT /api/v1/customers/{id}`
+- `ProductController`: `POST /api/v1/products`, `GET /api/v1/products`, `GET /api/v1/products/search?name=...`
+- `CategoryController`: `POST /api/v1/categories`, `GET /api/v1/categories`
+- `OrderController`: `POST /api/v1/orders`
+
+Exception handling:
+
+- `GlobalExceptionHandler` handles `ResourceNotFoundException` (404), `DuplicateResourceException` (409), `BusinessRuleException` (422), and `MethodArgumentNotValidException` (400).
+- All error responses include `timestamp`, `status`, `error`, and `message`.
+- Validation errors additionally include a `fieldErrors` map.
+
+API Documentation:
+
+- Swagger UI is available at `http://localhost:8080/swagger-ui.html` after startup.
+- OpenAPI JSON spec is available at `http://localhost:8080/v3/api-docs`.
+
+## Part 4 Submission Checklist
+
+- [x] Git Branch: Created `feature/rest-api`.
+- [x] Dependencies: Added `springdoc-openapi-starter-webmvc-ui:2.8.5`.
+- [x] Controllers: Implemented `CustomerController`, `ProductController`, `CategoryController`, and `OrderController`.
+- [x] Endpoints: Created all required REST endpoints with correct HTTP verbs and status codes.
+- [x] Exception Handling: Implemented `GlobalExceptionHandler` with `@RestControllerAdvice`.
+- [x] Validation: All write endpoints use `@Valid` on `@RequestBody`.
+- [x] Swagger UI: API documentation accessible at `/swagger-ui.html`.
+- [x] Commits: Created descriptive Part 4 commits.
+- [x] Push: Pushed `feature/rest-api` to GitHub.
+
 ## Git
 
 Current workshop branch:
 
 ```bash
-feature/service-layer
+feature/rest-api
 ```
 
 Pull request link:
 
 ```text
-https://github.com/Fadi-Yosef/E-commerceplatformJPA/pull/new/feature/service-layer
+https://github.com/Fadi-Yosef/E-commerceplatformJPA/pull/new/feature/rest-api
 ```
