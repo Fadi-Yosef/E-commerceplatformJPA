@@ -262,14 +262,15 @@ API Documentation:
 
 ## Git
 
-Current workshop branch:
+Repository: https://github.com/Fadi-Yosef/E-commerceplatformJPA
 
-```bash
-feature/rest-api
-```
+### Branches
 
-Pull request link:
+| Branch | Part | Description |
+|--------|------|-------------|
+| `feature/jpa-part1` | Part 1 | JPA entities, one-to-one relationships (Customer, Address, UserProfile) |
+| `feature/jpa-part2` | Part 2 | Catalog, orders, promotions, repositories, and data seeding |
+| `feature/service-layer-part-3` | Part 3 | Service layer, DTOs, mappers, validation, and custom exceptions |
+| `feature/rest-api` | Part 4 | REST controllers, global exception handler, and Swagger UI |
 
-```text
-https://github.com/Fadi-Yosef/E-commerceplatformJPA/pull/new/feature/rest-api
-```
+Current branch: `feature/rest-api`
