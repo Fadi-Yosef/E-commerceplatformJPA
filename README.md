@@ -161,7 +161,7 @@ sa
 
 Password is empty.
 
-## Submission Checklist
+## Part 2 Submission Checklist
 
 - [x] Git Branch: Created `feature/jpa-part2`.
 - [x] Entities & Enums: Added the required catalog, promotion, order, order item, and status model.
